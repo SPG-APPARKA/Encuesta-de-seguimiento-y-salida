@@ -239,6 +239,14 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
     <br>
     <div class="section-chip">💜 &nbsp;Cuéntanos sobre ti</div>
 
+    <div class="card" id="c-dni">
+        <div class="q-text">¿Cuál es tu DNI? <span class="required">*</span></div>
+        <div class="dni-wrap">
+          <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" oninput="onDNI(this)" autocomplete="off" inputmode="numeric">
+          <span class="dni-counter" id="dni-c">0/8</span>
+        </div>
+      </div>
+
     <div class="card" id="c-trabaja">
       <div class="q-text">¿Sigues siendo parte del equipo apparka? <span class="required">*</span></div>
       <div class="radio-group">
@@ -248,14 +256,6 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
     </div>
 
     <div id="bloque-activo" style="display:none">
-      <div class="card" id="c-dni">
-        <div class="q-text">¿Cuál es tu DNI? <span class="required">*</span></div>
-        <div class="dni-wrap">
-          <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" oninput="onDNI(this)" autocomplete="off" inputmode="numeric">
-          <span class="dni-counter" id="dni-c">0/8</span>
-        </div>
-      </div>
-
       <div class="card" id="c-playa">
         <div class="q-text">¿En qué playa o ubicación trabajas? <span class="required">*</span></div>
         <div class="ss-wrap">
@@ -701,8 +701,8 @@ function go2(){
   const tr=getR("trabaja");
   if(!tr){shake("c-trabaja");toast("¿Sigues en apparka? Selecciona una opción 😊");return;}
   trab=tr;
+  if(document.getElementById("dni").value.length!==8){shake("c-dni");toast("Tu DNI debe tener exactamente 8 dígitos 🔢");return;}
   if(tr==="Si"){
-    if(document.getElementById("dni").value.length!==8){shake("c-dni");toast("Tu DNI debe tener exactamente 8 dígitos 🔢");return;}
     if(!pSel.main){shake("c-playa");toast("¿En qué playa trabajas? Búscala arriba 📍");return;}
     if(!getR("puesto")){shake("c-puesto");toast("Cuéntanos qué puesto tienes 💼");return;}
     if(!getR("tiempo")){shake("c-tiempo");toast("¿Cuánto tiempo llevas con nosotros? 🗓️");return;}
@@ -748,7 +748,7 @@ function buildRow(){
       row.p13_continuar=getR("cont30")||"";row.p14_mejora=document.getElementById("mej30").value.trim();
     }
   }else{
-    row.tipo="Salida";row.playa=pSel.sal;row.s_puesto=getR("s-puesto")||"";
+    row.tipo="Salida";row.dni=document.getElementById("dni").value;row.playa=pSel.sal;row.s_puesto=getR("s-puesto")||"";
     row.s_ingreso=document.getElementById("s-ingreso").value;
     row.s_retiro=document.getElementById("s-retiro").value;
     row.s_genero=getR("s-genero")||"";row.s_turno=getR("s-turno")||"";row.s_edad=getR("s-edad")||"";
