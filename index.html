@@ -197,6 +197,69 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
 #saving p{color:white;font-size:15px;font-weight:600;}
 
 @media(max-width:480px){.content{padding:1rem 1rem 0;}.btn-row{padding-bottom:0.5rem;}}
+
+
+
+
+
+/* ── GRABADOR DE AUDIO ── */
+.audio-card{
+  background:linear-gradient(135deg,#faf5ff,#f2e6fd);
+  border:2px solid var(--p200);border-radius:var(--r);
+  padding:1.25rem;margin-bottom:1rem;
+}
+.audio-card .ac-title{font-size:16px;font-weight:700;color:var(--g800);margin-bottom:4px;}
+.audio-card .ac-sub{font-size:13px;color:var(--g600);margin-bottom:1rem;line-height:1.5;}
+.rec-btn{
+  width:100%;padding:16px;border-radius:99px;border:none;
+  background:linear-gradient(135deg,var(--p600),var(--pink));
+  color:white;font-size:15px;font-weight:700;font-family:inherit;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 4px 18px rgba(90,26,153,0.3);transition:all 0.2s;
+}
+.rec-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(90,26,153,0.4);}
+.rec-btn.recording{
+  background:linear-gradient(135deg,#dc2626,#f87171);
+  box-shadow:0 4px 18px rgba(220,38,38,0.4);
+  animation:pulsar 1.2s ease infinite;
+}
+.rec-btn.done{background:linear-gradient(135deg,var(--ok),#4ade80);box-shadow:0 4px 18px rgba(22,163,74,0.3);}
+@keyframes pulsar{
+  0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.4);}
+  50%{box-shadow:0 0 0 14px rgba(220,38,38,0);}
+}
+.rec-waves{display:flex;gap:4px;align-items:center;height:22px;}
+.rec-waves span{width:3px;background:white;border-radius:99px;animation:wv 0.7s ease infinite;}
+.rec-waves span:nth-child(1){height:6px;animation-delay:0s;}
+.rec-waves span:nth-child(2){height:16px;animation-delay:0.1s;}
+.rec-waves span:nth-child(3){height:10px;animation-delay:0.2s;}
+.rec-waves span:nth-child(4){height:20px;animation-delay:0.15s;}
+.rec-waves span:nth-child(5){height:8px;animation-delay:0.05s;}
+.rec-waves span:nth-child(6){height:14px;animation-delay:0.25s;}
+@keyframes wv{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.3);}}
+.rec-timer{
+  text-align:center;font-size:22px;font-weight:800;
+  color:var(--p700);margin:12px 0 4px;display:none;
+  font-variant-numeric:tabular-nums;letter-spacing:0.05em;
+}
+.rec-timer.show{display:block;}
+.rec-status{text-align:center;font-size:13px;color:var(--g400);margin-top:8px;min-height:18px;}
+.rec-status.recording{color:#dc2626;font-weight:600;}
+.rec-status.done{color:var(--ok);font-weight:600;}
+.rec-status.err{color:var(--warn);font-weight:600;}
+.audio-player{
+  margin-top:12px;width:100%;border-radius:var(--rs);
+  background:white;border:2px solid var(--p200);display:none;
+}
+.audio-player.show{display:block;}
+.rec-redo{
+  margin-top:10px;width:100%;padding:10px;border-radius:var(--rs);
+  background:white;border:2px solid var(--p200);color:var(--p600);
+  font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;
+  display:none;transition:background 0.2s;
+}
+.rec-redo.show{display:flex;align-items:center;justify-content:center;gap:8px;}
+.rec-redo:hover{background:var(--p50);}
 </style>
 </head>
 <body>
@@ -237,15 +300,15 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
   <!-- STEP 1 -->
   <div class="step on" id="step-1">
     <br>
-    <div class="section-chip">💜 &nbsp;Cuéntanos sobre ti</div>
+    <div class="section-chip">👋 &nbsp;Bienvenido/a</div>
 
     <div class="card" id="c-dni">
-        <div class="q-text">¿Cuál es tu DNI? <span class="required">*</span></div>
-        <div class="dni-wrap">
-          <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" oninput="onDNI(this)" autocomplete="off" inputmode="numeric">
-          <span class="dni-counter" id="dni-c">0/8</span>
-        </div>
+      <div class="q-text">¿Cuál es tu DNI? <span class="required">*</span></div>
+      <div class="dni-wrap">
+        <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" oninput="onDNI(this)" autocomplete="off" inputmode="numeric">
+        <span class="dni-counter" id="dni-c">0/8</span>
       </div>
+    </div>
 
     <div class="card" id="c-trabaja">
       <div class="q-text">¿Sigues siendo parte del equipo apparka? <span class="required">*</span></div>
@@ -255,39 +318,48 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
       </div>
     </div>
 
-    <div id="bloque-activo" style="display:none">
-      <div class="card" id="c-playa">
-        <div class="q-text">¿En qué playa o ubicación trabajas? <span class="required">*</span></div>
-        <div class="ss-wrap">
-          <div class="ss-input-row">
-            <div class="ss-icon"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-            <input class="ss-input" id="ss-main-inp" placeholder="Escribe para buscar..." autocomplete="off" oninput="ssFilter('main',this.value)" onfocus="ssOpen('main')" onblur="ssBlur('main')">
-            <div class="ss-list" id="ss-main-list"></div>
-          </div>
-          <div id="ss-main-chip" style="display:none"></div>
-        </div>
-      </div>
+    <div class="btn-row"><button class="btn-p" onclick="go1b()">Siguiente &nbsp;→</button></div>
+  </div>
 
-      <div class="card" id="c-puesto">
-        <div class="q-text">¿Qué puesto tienes? <span class="required">*</span></div>
-        <div class="radio-group">
-          <label class="radio-opt" onclick="pickR('puesto','Anfitrión(a)',this)"><input type="radio" name="puesto" value="Anfitrión(a)"><div class="radio-dot"></div>🤝 &nbsp;Anfitrión(a)</label>
-          <label class="radio-opt" onclick="pickR('puesto','Valet Parking',this)"><input type="radio" name="puesto" value="Valet Parking"><div class="radio-dot"></div>🚗 &nbsp;Valet Parking</label>
-          <label class="radio-opt" onclick="pickR('puesto','Operario de limpieza',this)"><input type="radio" name="puesto" value="Operario de limpieza"><div class="radio-dot"></div>✨ &nbsp;Operario de limpieza</label>
-        </div>
-      </div>
+  <!-- STEP 1B: Playa, puesto, tiempo (solo si Sí) -->
+  <div class="step" id="step-1b">
+    <br>
+    <div class="section-chip">💜 &nbsp;Cuéntanos sobre ti</div>
 
-      <div class="card" id="c-tiempo">
-        <div class="q-text">¿Cuánto tiempo llevas con nosotros? <span class="required">*</span></div>
-        <div class="radio-group">
-          <label class="radio-opt" onclick="pickR('tiempo','7',this)"><input type="radio" name="tiempo" value="7"><div class="radio-dot"></div>🌱 &nbsp;1 semana (7 días)</label>
-          <label class="radio-opt" onclick="pickR('tiempo','15',this)"><input type="radio" name="tiempo" value="15"><div class="radio-dot"></div>🌿 &nbsp;2 semanas (15 días)</label>
-          <label class="radio-opt" onclick="pickR('tiempo','30',this)"><input type="radio" name="tiempo" value="30"><div class="radio-dot"></div>🌳 &nbsp;1 mes (30 días)</label>
+    <div class="card" id="c-playa">
+      <div class="q-text">¿En qué playa o ubicación trabajas? <span class="required">*</span></div>
+      <div class="ss-wrap">
+        <div class="ss-input-row">
+          <div class="ss-icon"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+          <input class="ss-input" id="ss-main-inp" placeholder="Escribe para buscar..." autocomplete="off" oninput="ssFilter('main',this.value)" onfocus="ssOpen('main')" onblur="ssBlur('main')">
+          <div class="ss-list" id="ss-main-list"></div>
         </div>
+        <div id="ss-main-chip" style="display:none"></div>
       </div>
     </div>
 
-    <div class="btn-row"><button class="btn-p" onclick="go2()">Siguiente &nbsp;→</button></div>
+    <div class="card" id="c-puesto">
+      <div class="q-text">¿Qué puesto tienes? <span class="required">*</span></div>
+      <div class="radio-group">
+        <label class="radio-opt" onclick="pickR('puesto','Anfitrión(a)',this)"><input type="radio" name="puesto" value="Anfitrión(a)"><div class="radio-dot"></div>🤝 &nbsp;Anfitrión(a)</label>
+        <label class="radio-opt" onclick="pickR('puesto','Valet Parking',this)"><input type="radio" name="puesto" value="Valet Parking"><div class="radio-dot"></div>🚗 &nbsp;Valet Parking</label>
+        <label class="radio-opt" onclick="pickR('puesto','Operario de limpieza',this)"><input type="radio" name="puesto" value="Operario de limpieza"><div class="radio-dot"></div>✨ &nbsp;Operario de limpieza</label>
+      </div>
+    </div>
+
+    <div class="card" id="c-tiempo">
+      <div class="q-text">¿Cuánto tiempo llevas con nosotros? <span class="required">*</span></div>
+      <div class="radio-group">
+        <label class="radio-opt" onclick="pickR('tiempo','7',this)"><input type="radio" name="tiempo" value="7"><div class="radio-dot"></div>🌱 &nbsp;1 semana (7 días)</label>
+        <label class="radio-opt" onclick="pickR('tiempo','15',this)"><input type="radio" name="tiempo" value="15"><div class="radio-dot"></div>🌿 &nbsp;2 semanas (15 días)</label>
+        <label class="radio-opt" onclick="pickR('tiempo','30',this)"><input type="radio" name="tiempo" value="30"><div class="radio-dot"></div>🌳 &nbsp;1 mes (30 días)</label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBackTo('step-1')">← Atrás</button>
+      <button class="btn-p" onclick="go2()">Siguiente &nbsp;→</button>
+    </div>
   </div>
 
   <!-- STEP 2 -->
@@ -400,11 +472,18 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
         </div>
       </div>
 
-      <div class="card" id="c-s-cambio">
-        <div class="q-text">💡 ¿Qué cambio concreto habría hecho que te quedaras más tiempo? <span class="required">*</span></div>
-        <div class="textarea-wrap">
-          <textarea id="s-cambio" placeholder="Cuéntanos con libertad, tu respuesta nos ayuda mucho..." oninput="validateTA(this,'c-s-cambio')"></textarea>
-          <div class="textarea-hint">Ayúdanos con algo concreto — cuanto más específico, mejor podemos mejorar 🙌</div>
+      <div class="audio-card" id="ac-s-cambio">
+        <div class="ac-title">💡 ¿Qué cambio concreto habría hecho que te quedaras más tiempo?</div>
+        <div class="ac-sub">Toca el botón y habla — tu audio queda guardado 🎙️</div>
+        <button class="rec-btn" id="recbtn-s-cambio" onclick="toggleRec('s-cambio')" type="button">
+          <span class="rec-waves" id="recwaves-s-cambio" style="display:none"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+          <span id="reclabel-s-cambio">🎙️ &nbsp;Grabar respuesta</span>
+        </button>
+        <div class="rec-timer" id="rectimer-s-cambio">0:00</div>
+        <div class="rec-status" id="recstatus-s-cambio">Toca para comenzar a grabar</div>
+        <audio class="audio-player" id="recaudio-s-cambio" controls></audio>
+        <button class="rec-redo" id="recredo-s-cambio" onclick="redoRec('s-cambio')" type="button">🔄 &nbsp;Volver a grabar</button>
+      </div>
         </div>
       </div>
 
@@ -429,11 +508,18 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
         </div>
       </div>
 
-      <div class="card" id="c-s-detalle">
-        <div class="q-text">📝 Cuéntanos con tus palabras por qué decidiste irte <span class="required">*</span></div>
-        <div class="textarea-wrap">
-          <textarea id="s-detalle" placeholder="Cualquier detalle adicional nos ayuda mucho..." oninput="validateTA(this,'c-s-detalle')"></textarea>
-          <div class="textarea-hint">Tu honestidad nos permite mejorar para los próximos colaboradores 💜</div>
+      <div class="audio-card" id="ac-s-detalle">
+        <div class="ac-title">📝 Cuéntanos con tus palabras por qué decidiste irte</div>
+        <div class="ac-sub">Toca el botón y habla — tu audio queda guardado 🎙️</div>
+        <button class="rec-btn" id="recbtn-s-detalle" onclick="toggleRec('s-detalle')" type="button">
+          <span class="rec-waves" id="recwaves-s-detalle" style="display:none"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+          <span id="reclabel-s-detalle">🎙️ &nbsp;Grabar respuesta</span>
+        </button>
+        <div class="rec-timer" id="rectimer-s-detalle">0:00</div>
+        <div class="rec-status" id="recstatus-s-detalle">Toca para comenzar a grabar</div>
+        <audio class="audio-player" id="recaudio-s-detalle" controls></audio>
+        <button class="rec-redo" id="recredo-s-detalle" onclick="redoRec('s-detalle')" type="button">🔄 &nbsp;Volver a grabar</button>
+      </div>
         </div>
       </div>
     </div>
@@ -463,11 +549,18 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
           <label class="radio-opt" onclick="pickR('cont7','No',this)"><input type="radio" name="cont7" value="No"><div class="radio-dot"></div>😔 &nbsp;No</label>
         </div>
       </div>
-      <div class="card" id="c-mej7">
-        <div class="q-text">💡 ¿Hay algo que podríamos haber hecho mejor para tu llegada? <span class="required">*</span></div>
-        <div class="textarea-wrap">
-          <textarea id="mej7" placeholder="Tu comentario aquí..." oninput="validateTA(this,'c-mej7')"></textarea>
-          <div class="textarea-hint">¡Tu respuesta real marca la diferencia! 🌟</div>
+      <div class="audio-card" id="ac-mej7">
+        <div class="ac-title">💡 ¿Hay algo que podríamos haber hecho mejor para tu llegada?</div>
+        <div class="ac-sub">Toca el botón y habla — tu audio queda guardado 🎙️</div>
+        <button class="rec-btn" id="recbtn-mej7" onclick="toggleRec('mej7')" type="button">
+          <span class="rec-waves" id="recwaves-mej7" style="display:none"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+          <span id="reclabel-mej7">🎙️ &nbsp;Grabar respuesta</span>
+        </button>
+        <div class="rec-timer" id="rectimer-mej7">0:00</div>
+        <div class="rec-status" id="recstatus-mej7">Toca para comenzar a grabar</div>
+        <audio class="audio-player" id="recaudio-mej7" controls></audio>
+        <button class="rec-redo" id="recredo-mej7" onclick="redoRec('mej7')" type="button">🔄 &nbsp;Volver a grabar</button>
+      </div>
         </div>
       </div>
     </div>
@@ -497,11 +590,18 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
           <label class="radio-opt" onclick="pickR('cont15','No',this)"><input type="radio" name="cont15" value="No"><div class="radio-dot"></div>😔 &nbsp;No</label>
         </div>
       </div>
-      <div class="card" id="c-mej15">
-        <div class="q-text">🚀 ¿Qué podríamos hacer mejor para que tu experiencia sea aún más genial? <span class="required">*</span></div>
-        <div class="textarea-wrap">
-          <textarea id="mej15" placeholder="Tu comentario aquí..." oninput="validateTA(this,'c-mej15')"></textarea>
-          <div class="textarea-hint">¡Tu respuesta real marca la diferencia! 🌟</div>
+      <div class="audio-card" id="ac-mej15">
+        <div class="ac-title">🚀 ¿Qué podríamos hacer mejor para que tu experiencia sea aún más genial?</div>
+        <div class="ac-sub">Toca el botón y habla — tu audio queda guardado 🎙️</div>
+        <button class="rec-btn" id="recbtn-mej15" onclick="toggleRec('mej15')" type="button">
+          <span class="rec-waves" id="recwaves-mej15" style="display:none"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+          <span id="reclabel-mej15">🎙️ &nbsp;Grabar respuesta</span>
+        </button>
+        <div class="rec-timer" id="rectimer-mej15">0:00</div>
+        <div class="rec-status" id="recstatus-mej15">Toca para comenzar a grabar</div>
+        <audio class="audio-player" id="recaudio-mej15" controls></audio>
+        <button class="rec-redo" id="recredo-mej15" onclick="redoRec('mej15')" type="button">🔄 &nbsp;Volver a grabar</button>
+      </div>
         </div>
       </div>
     </div>
@@ -532,11 +632,18 @@ textarea{resize:vertical;min-height:95px;line-height:1.65;}
           <label class="radio-opt" onclick="pickR('cont30','No',this)"><input type="radio" name="cont30" value="No"><div class="radio-dot"></div>😔 &nbsp;No</label>
         </div>
       </div>
-      <div class="card" id="c-mej30">
-        <div class="q-text">✨ ¿Qué podríamos hacer para que tu experiencia sea aún mejor? <span class="required">*</span></div>
-        <div class="textarea-wrap">
-          <textarea id="mej30" placeholder="Tu comentario aquí..." oninput="validateTA(this,'c-mej30')"></textarea>
-          <div class="textarea-hint">¡Tu respuesta real marca la diferencia! 🌟</div>
+      <div class="audio-card" id="ac-mej30">
+        <div class="ac-title">✨ ¿Qué podríamos hacer para que tu experiencia sea aún mejor?</div>
+        <div class="ac-sub">Toca el botón y habla — tu audio queda guardado 🎙️</div>
+        <button class="rec-btn" id="recbtn-mej30" onclick="toggleRec('mej30')" type="button">
+          <span class="rec-waves" id="recwaves-mej30" style="display:none"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+          <span id="reclabel-mej30">🎙️ &nbsp;Grabar respuesta</span>
+        </button>
+        <div class="rec-timer" id="rectimer-mej30">0:00</div>
+        <div class="rec-status" id="recstatus-mej30">Toca para comenzar a grabar</div>
+        <audio class="audio-player" id="recaudio-mej30" controls></audio>
+        <button class="rec-redo" id="recredo-mej30" onclick="redoRec('mej30')" type="button">🔄 &nbsp;Volver a grabar</button>
+      </div>
         </div>
       </div>
     </div>
@@ -690,93 +797,133 @@ function ssClear(id){
 }
 
 // VALIDATION helpers
+function checkAudio(tid, cardId, label) {
+  // Audio is optional - never block submission
+  return true;
+}
 function checkTA(id,cardId,label){
   const v=document.getElementById(id).value.trim();
   if(!v||v.replace(/[.,\s]/g,"").length===0){shake(cardId);toast("Falta: "+label+" — ¡Cuéntanos algo real! 🙏");return false;}
   return true;
 }
 
-function go2(){
-  let ok=true;
+function go1b() {
+  // Validate DNI and trabaja
+  if(document.getElementById("dni").value.length!==8){shake("c-dni");toast("Tu DNI debe tener exactamente 8 dígitos 🔢");return;}
   const tr=getR("trabaja");
   if(!tr){shake("c-trabaja");toast("¿Sigues en apparka? Selecciona una opción 😊");return;}
   trab=tr;
-  if(document.getElementById("dni").value.length!==8){shake("c-dni");toast("Tu DNI debe tener exactamente 8 dígitos 🔢");return;}
-  if(tr==="Si"){
-    if(!pSel.main){shake("c-playa");toast("¿En qué playa trabajas? Búscala arriba 📍");return;}
-    if(!getR("puesto")){shake("c-puesto");toast("Cuéntanos qué puesto tienes 💼");return;}
-    if(!getR("tiempo")){shake("c-tiempo");toast("¿Cuánto tiempo llevas con nosotros? 🗓️");return;}
-    tpo=getR("tiempo");
-  }
-  hideB("step-1");showB("step-2");
-  ["b-salida","b-7","b-15","b-30"].forEach(b=>hideB(b));
+
   if(tr==="No"){
+    // Go directly to exit survey
+    hideB("step-1");
+    ["b-salida","b-7","b-15","b-30"].forEach(b=>hideB(b));
     showB("b-salida");
     document.getElementById("chip2").innerHTML="💌 &nbsp;Encuesta de salida";
     setProg(2,3,"Encuesta de salida");
-  }else if(tpo==="7"){showB("b-7");setProg(2,3,"Primeros 7 días");}
-  else if(tpo==="15"){showB("b-15");setProg(2,3,"Primeras 2 semanas");}
-  else{showB("b-30");setProg(2,3,"Tu primer mes");}
+    hideB("step-1b");
+    showB("step-2");
+    document.getElementById("step-2").classList.add("on");
+  } else {
+    // Show step 1b (playa, puesto, tiempo)
+    hideB("step-1");
+    showB("step-1b");
+    document.getElementById("step-1b").classList.add("on");
+    setProg(2,4,"Cuéntanos sobre ti");
+  }
+  window.scrollTo(0,0);
+}
+
+function go2(){
+  if(!pSel.main){shake("c-playa");toast("¿En qué playa trabajas? Búscala arriba 📍");return;}
+  if(!getR("puesto")){shake("c-puesto");toast("Cuéntanos qué puesto tienes 💼");return;}
+  if(!getR("tiempo")){shake("c-tiempo");toast("¿Cuánto tiempo llevas con nosotros? 🗓️");return;}
+  tpo=getR("tiempo");
+
+  hideB("step-1b");
+  document.getElementById("step-1b").classList.remove("on");
+  ["b-salida","b-7","b-15","b-30"].forEach(b=>hideB(b));
+  if(tpo==="7"){showB("b-7");setProg(3,4,"Primeros 7 días");}
+  else if(tpo==="15"){showB("b-15");setProg(3,4,"Primeras 2 semanas");}
+  else{showB("b-30");setProg(3,4,"Tu primer mes");}
+  showB("step-2");
   document.getElementById("step-2").classList.add("on");
   window.scrollTo(0,0);
 }
 
 function goBack(){
   document.getElementById("step-2").classList.remove("on");
-  showB("step-1");hideB("step-2");
-  setProg(1,3,"Cuéntanos sobre ti");window.scrollTo(0,0);
+  hideB("step-2");
+  if(trab==="No"){
+    showB("step-1");
+    setProg(1,3,"Bienvenido/a");
+  } else {
+    showB("step-1b");
+    document.getElementById("step-1b").classList.add("on");
+    setProg(2,4,"Cuéntanos sobre ti");
+  }
+  window.scrollTo(0,0);
+}
+
+function goBackTo(stepId){
+  document.getElementById("step-1b").classList.remove("on");
+  hideB("step-1b");
+  showB(stepId);
+  setProg(1,3,"Bienvenido/a");
+  window.scrollTo(0,0);
 }
 
 function buildRow(){
-  const row={fecha:new Date().toLocaleString("es-PE"),tipo:""};
+  const row={fecha:new Date().toLocaleString("es-PE"),tipo:"",dni:document.getElementById("dni").value||""};
   if(trab==="Si"){
-    row.tipo="Seguimiento";row.dni=document.getElementById("dni").value;
-    row.playa=pSel.main;row.puesto=getR("puesto");
+    row.tipo="Seguimiento";
+    row.playa=pSel.main||"";
+    row.puesto=getR("puesto")||"";
     row.tiempo=tpo==="7"?"1 semana":tpo==="15"?"2 semanas":"1 mes";
     if(tpo==="7"){
-      row.p6_info=lk.l7_1?LL[lk.l7_1-1]:"";row.p6_func=lk.l7_2?LL[lk.l7_2-1]:"";
-      row.p6_bienvenida=lk.l7_3?LL[lk.l7_3-1]:"";row.p6_apoyo=lk.l7_4?LL[lk.l7_4-1]:"";
-      row.p7_continuar=getR("cont7")||"";row.p8_mejora=document.getElementById("mej7").value.trim();
-    }else if(tpo==="15"){
-      row.p9_comodo=lk.l15_1?LL[lk.l15_1-1]:"";row.p9_trato=lk.l15_2?LL[lk.l15_2-1]:"";
-      row.p9_exp=lk.l15_3?LL[lk.l15_3-1]:"";row.p9_adapt=lk.l15_4?LL[lk.l15_4-1]:"";
-      row.p10_continuar=getR("cont15")||"";row.p11_mejora=document.getElementById("mej15").value.trim();
-    }else{
-      row.p12_cultura=lk.l30_1?LL[lk.l30_1-1]:"";row.p12_vive=lk.l30_2?LL[lk.l30_2-1]:"";
-      row.p12_jefe=lk.l30_3?LL[lk.l30_3-1]:"";row.p12_escuchado=lk.l30_4?LL[lk.l30_4-1]:"";
+      row.p6_info=lk.l7_1?LL[lk.l7_1-1]:"";
+      row.p6_func=lk.l7_2?LL[lk.l7_2-1]:"";
+      row.p6_bienvenida=lk.l7_3?LL[lk.l7_3-1]:"";
+      row.p6_apoyo=lk.l7_4?LL[lk.l7_4-1]:"";
+      row.p7_continuar=getR("cont7")||"";
+      row.p8_mejora=recState["mej7"]&&recState["mej7"].blobUrl?"[Audio grabado]":"";
+    } else if(tpo==="15"){
+      row.p9_comodo=lk.l15_1?LL[lk.l15_1-1]:"";
+      row.p9_trato=lk.l15_2?LL[lk.l15_2-1]:"";
+      row.p9_exp=lk.l15_3?LL[lk.l15_3-1]:"";
+      row.p9_adapt=lk.l15_4?LL[lk.l15_4-1]:"";
+      row.p10_continuar=getR("cont15")||"";
+      row.p11_mejora=recState["mej15"]&&recState["mej15"].blobUrl?"[Audio grabado]":"";
+    } else {
+      row.p12_cultura=lk.l30_1?LL[lk.l30_1-1]:"";
+      row.p12_vive=lk.l30_2?LL[lk.l30_2-1]:"";
+      row.p12_jefe=lk.l30_3?LL[lk.l30_3-1]:"";
+      row.p12_escuchado=lk.l30_4?LL[lk.l30_4-1]:"";
       row.p12_orgullo=lk.l30_5?LL[lk.l30_5-1]:"";
-      row.p13_continuar=getR("cont30")||"";row.p14_mejora=document.getElementById("mej30").value.trim();
+      row.p13_continuar=getR("cont30")||"";
+      row.p14_mejora=recState["mej30"]&&recState["mej30"].blobUrl?"[Audio grabado]":"";
     }
-  }else{
-    row.tipo="Salida";row.dni=document.getElementById("dni").value;row.playa=pSel.sal;row.s_puesto=getR("s-puesto")||"";
-    row.s_ingreso=document.getElementById("s-ingreso").value;
-    row.s_retiro=document.getElementById("s-retiro").value;
-    row.s_genero=getR("s-genero")||"";row.s_turno=getR("s-turno")||"";row.s_edad=getR("s-edad")||"";
+  } else {
+    row.tipo="Salida";
+    row.playa=pSel.sal||"";
+    row.s_puesto=getR("s-puesto")||"";
+    row.s_ingreso=document.getElementById("s-ingreso").value||"";
+    row.s_retiro=document.getElementById("s-retiro").value||"";
+    row.s_genero=getR("s-genero")||"";
+    row.s_turno=getR("s-turno")||"";
+    row.s_edad=getR("s-edad")||"";
     ["func","cap","uni","ritmo","sup"].forEach((n,i)=>row["s8_"+n]=lk["s8_"+(i+1)]?LS[lk["s8_"+(i+1)]-1]:"");
     ["acudir","com","comp"].forEach((n,i)=>row["s9_"+n]=lk["s9_"+(i+1)]?LS[lk["s9_"+(i+1)]-1]:"");
-    row.s_cambio=document.getElementById("s-cambio").value.trim();
-    row.s_motivo=motivo;
-    row.s_detalle=document.getElementById("s-detalle").value.trim();
+    row.s_cambio=recState["s-cambio"]&&recState["s-cambio"].blobUrl?"[Audio grabado]":"";
+    row.s_motivo=motivo||"";
+    row.s_detalle=recState["s-detalle"]&&recState["s-detalle"].blobUrl?"[Audio grabado]":"";
   }
   return row;
 }
 
 function validate2(){
-  if(trab==="Si"){
-    if(tpo==="7"){
-      if(["l7_1","l7_2","l7_3","l7_4"].some(k=>!lk[k])){shake("c-l7");toast("Responde todas las afirmaciones de la tabla 🌱");return false;}
-      if(!getR("cont7")){shake("c-cont7");toast("¿Te gustaría continuar en apparka? 💜");return false;}
-      if(!checkTA("mej7","c-mej7","tu sugerencia de mejora"))return false;
-    }else if(tpo==="15"){
-      if(["l15_1","l15_2","l15_3","l15_4"].some(k=>!lk[k])){shake("c-l15");toast("Responde todas las afirmaciones de la tabla 🌿");return false;}
-      if(!getR("cont15")){shake("c-cont15");toast("¿Te gustaría continuar en apparka? 💜");return false;}
-      if(!checkTA("mej15","c-mej15","tu sugerencia de mejora"))return false;
-    }else{
-      if(["l30_1","l30_2","l30_3","l30_4","l30_5"].some(k=>!lk[k])){shake("c-l30");toast("Responde todas las afirmaciones de la tabla 🌳");return false;}
-      if(!getR("cont30")){shake("c-cont30");toast("¿Te ves continuando en apparka? 💜");return false;}
-      if(!checkTA("mej30","c-mej30","tu sugerencia de mejora"))return false;
-    }
-  }else{
+  // Salida path
+  if(trab==="No"){
     if(!pSel.sal){shake("c-sal-playa");toast("¿En qué playa trabajaste? 📍");return false;}
     if(!getR("s-puesto")){shake("c-s-puesto");toast("¿Qué puesto ocupaste? 💼");return false;}
     if(!document.getElementById("s-ingreso").value){shake("c-s-ingreso");toast("¿Cuándo ingresaste? 📅");return false;}
@@ -784,23 +931,40 @@ function validate2(){
     if(!getR("s-genero")){shake("c-s-genero");toast("¿Con qué género te identificas? 🙋");return false;}
     if(["s8_1","s8_2","s8_3","s8_4","s8_5"].some(k=>!lk[k])){shake("c-s8");toast("Responde todas las afirmaciones de experiencia inicial 🌱");return false;}
     if(["s9_1","s9_2","s9_3"].some(k=>!lk[k])){shake("c-s9");toast("Responde todas las afirmaciones de apoyo y clima 🤝");return false;}
-    if(!checkTA("s-cambio","c-s-cambio","el cambio que te hubiera hecho quedar"))return false;
     if(!motivo){shake("c-s-motivo");toast("¿Cuál fue el principal motivo de tu salida? 🚪");return false;}
-    if(!checkTA("s-detalle","c-s-detalle","los detalles de tu salida"))return false;
+    return true;
+  }
+  // Seguimiento path
+  if(!tpo) return true;
+  if(tpo==="7"){
+    if(["l7_1","l7_2","l7_3","l7_4"].some(k=>!lk[k])){shake("c-l7");toast("Responde todas las afirmaciones de la tabla 🌱");return false;}
+    if(!getR("cont7")){shake("c-cont7");toast("¿Te gustaría continuar en apparka? 💜");return false;}
+  } else if(tpo==="15"){
+    if(["l15_1","l15_2","l15_3","l15_4"].some(k=>!lk[k])){shake("c-l15");toast("Responde todas las afirmaciones de la tabla 🌿");return false;}
+    if(!getR("cont15")){shake("c-cont15");toast("¿Te gustaría continuar en apparka? 💜");return false;}
+  } else if(tpo==="30"){
+    if(["l30_1","l30_2","l30_3","l30_4","l30_5"].some(k=>!lk[k])){shake("c-l30");toast("Responde todas las afirmaciones de la tabla 🌳");return false;}
+    if(!getR("cont30")){shake("c-cont30");toast("¿Te ves continuando en apparka? 💜");return false;}
   }
   return true;
 }
 
 async function doSubmit(){
-  if(!validate2())return;
-  const row=buildRow();
+  if(!validate2()) return;
+  const row = buildRow();
   document.getElementById("saving").classList.add("show");
-  try{
+  try {
     await fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(row)});
-  }catch(e){console.log("Sheets not configured yet",e);}
+  } catch(e) {
+    console.log("Sheets error:",e);
+  }
   document.getElementById("saving").classList.remove("show");
-  hideB("scr-survey");
-  if(trab==="Si")show("scr-ok-seg");else show("scr-ok-sal");
+  document.getElementById("scr-survey").style.display="none";
+  if(trab==="Si") {
+    document.getElementById("scr-ok-seg").style.display="flex";
+  } else {
+    document.getElementById("scr-ok-sal").style.display="flex";
+  }
   window.scrollTo(0,0);
 }
 
@@ -832,15 +996,286 @@ function newResp(){
   dni.classList.remove("full");
   document.getElementById("dni-c").textContent="0/8";
   document.getElementById("dni-c").classList.remove("full");
-  document.getElementById("bloque-activo").style.display="none";
+  
+// ── GRABADOR DE AUDIO UNIVERSAL ──
+const recState = {}; // {tid: {stream, recorder, chunks, timerInterval, blob}}
+
+async function toggleRec(tid) {
+  if (recState[tid] && recState[tid].recording) {
+    stopRec(tid);
+  } else {
+    await startRec(tid);
+  }
+}
+
+async function startRec(tid) {
+  const btn = document.getElementById('recbtn-' + tid);
+  const label = document.getElementById('reclabel-' + tid);
+  const waves = document.getElementById('recwaves-' + tid);
+  const status = document.getElementById('recstatus-' + tid);
+  const timer = document.getElementById('rectimer-' + tid);
+  const player = document.getElementById('recaudio-' + tid);
+  const redo = document.getElementById('recredo-' + tid);
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+
+    recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, {type: 'audio/webm'});
+      const url = URL.createObjectURL(blob);
+      player.src = url;
+      player.classList.add('show');
+      redo.classList.add('show');
+      // Store blob URL for form submission
+      recState[tid].blobUrl = url;
+      recState[tid].blob = blob;
+      recState[tid].recording = false;
+      // Stop timer
+      clearInterval(recState[tid].timerInterval);
+      // Update UI
+      btn.classList.remove('recording');
+      btn.classList.add('done');
+      waves.style.display = 'none';
+      label.textContent = '✅  Audio guardado';
+      label.style.display = 'inline';
+      status.textContent = '✅ ¡Listo! Escucha tu respuesta arriba. Toca "Volver a grabar" si quieres repetirlo.';
+      status.className = 'rec-status done';
+      timer.classList.remove('show');
+      // Stop all tracks
+      stream.getTracks().forEach(t => t.stop());
+    };
+
+    recorder.start();
+    recState[tid] = {stream, recorder, chunks, recording: true, blob: null, blobUrl: null};
+
+    // UI recording state
+    btn.classList.add('recording');
+    btn.classList.remove('done');
+    waves.style.display = 'flex';
+    label.style.display = 'none';
+    player.classList.remove('show');
+    redo.classList.remove('show');
+    status.textContent = '🔴 Grabando... toca de nuevo para detener';
+    status.className = 'rec-status recording';
+    timer.classList.add('show');
+
+    // Timer
+    let secs = 0;
+    recState[tid].timerInterval = setInterval(() => {
+      secs++;
+      const m = Math.floor(secs/60);
+      const s = secs % 60;
+      timer.textContent = m + ':' + String(s).padStart(2,'0');
+      // Auto stop at 3 minutes
+      if (secs >= 180) stopRec(tid);
+    }, 1000);
+
+  } catch(err) {
+    const status = document.getElementById('recstatus-' + tid);
+    if (err.name === 'NotAllowedError') {
+      status.textContent = '⚠️ Activa el micrófono: Ajustes → Safari → Micrófono → Permitir';
+    } else {
+      status.textContent = '⚠️ Error: ' + err.message;
+    }
+    status.className = 'rec-status err';
+  }
+}
+
+function stopRec(tid) {
+  if (recState[tid] && recState[tid].recorder) {
+    recState[tid].recorder.stop();
+  }
+}
+
+function redoRec(tid) {
+  const player = document.getElementById('recaudio-' + tid);
+  const redo = document.getElementById('recredo-' + tid);
+  const btn = document.getElementById('recbtn-' + tid);
+  const label = document.getElementById('reclabel-' + tid);
+  const status = document.getElementById('recstatus-' + tid);
+  const timer = document.getElementById('rectimer-' + tid);
+  player.src = '';
+  player.classList.remove('show');
+  redo.classList.remove('show');
+  btn.classList.remove('done','recording');
+  label.textContent = '🎙️  Grabar respuesta';
+  label.style.display = 'inline';
+  status.textContent = 'Toca para comenzar a grabar';
+  status.className = 'rec-status';
+  timer.textContent = '0:00';
+  timer.classList.remove('show');
+  if (recState[tid]) recState[tid] = null;
+}
+
+// Override buildRow to include audio blob as base64
+const _origBuildRow = buildRow;
+function buildRow() {
+  const row = _origBuildRow();
+  // For each audio field, convert blob to note if exists
+  const audioFields = {
+    'mej7': 'p8_mejora', 'mej15': 'p11_mejora', 'mej30': 'p14_mejora',
+    's-cambio': 's_cambio', 's-detalle': 's_detalle'
+  };
+  Object.entries(audioFields).forEach(([tid, key]) => {
+    if (recState[tid] && recState[tid].blobUrl) {
+      row[key] = '[Audio grabado - ' + new Date().toLocaleTimeString('es-PE') + ']';
+    }
+  });
+  return row;
+}
+
+// init steps
+var s1b = document.getElementById("step-1b");
+if(s1b) s1b.style.display="none";
   document.getElementById("step-2").classList.remove("on");
-  hideB("step-2");showB("step-1");
+  hideB("step-2");
+  var s1b=document.getElementById("step-1b");
+  if(s1b){s1b.classList.remove("on");hideB("step-1b");}
+  showB("step-1");
   ["scr-ok-seg","scr-ok-sal"].forEach(id=>document.getElementById(id).style.display="none");
   show("scr-welcome");
   window.scrollTo(0,0);
 }
 
-document.getElementById("bloque-activo").style.display="none";
+
+// ── GRABADOR DE AUDIO UNIVERSAL ──
+const recState = {}; // {tid: {stream, recorder, chunks, timerInterval, blob}}
+
+async function toggleRec(tid) {
+  if (recState[tid] && recState[tid].recording) {
+    stopRec(tid);
+  } else {
+    await startRec(tid);
+  }
+}
+
+async function startRec(tid) {
+  const btn = document.getElementById('recbtn-' + tid);
+  const label = document.getElementById('reclabel-' + tid);
+  const waves = document.getElementById('recwaves-' + tid);
+  const status = document.getElementById('recstatus-' + tid);
+  const timer = document.getElementById('rectimer-' + tid);
+  const player = document.getElementById('recaudio-' + tid);
+  const redo = document.getElementById('recredo-' + tid);
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+
+    recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, {type: 'audio/webm'});
+      const url = URL.createObjectURL(blob);
+      player.src = url;
+      player.classList.add('show');
+      redo.classList.add('show');
+      // Store blob URL for form submission
+      recState[tid].blobUrl = url;
+      recState[tid].blob = blob;
+      recState[tid].recording = false;
+      // Stop timer
+      clearInterval(recState[tid].timerInterval);
+      // Update UI
+      btn.classList.remove('recording');
+      btn.classList.add('done');
+      waves.style.display = 'none';
+      label.textContent = '✅  Audio guardado';
+      label.style.display = 'inline';
+      status.textContent = '✅ ¡Listo! Escucha tu respuesta arriba. Toca "Volver a grabar" si quieres repetirlo.';
+      status.className = 'rec-status done';
+      timer.classList.remove('show');
+      // Stop all tracks
+      stream.getTracks().forEach(t => t.stop());
+    };
+
+    recorder.start();
+    recState[tid] = {stream, recorder, chunks, recording: true, blob: null, blobUrl: null};
+
+    // UI recording state
+    btn.classList.add('recording');
+    btn.classList.remove('done');
+    waves.style.display = 'flex';
+    label.style.display = 'none';
+    player.classList.remove('show');
+    redo.classList.remove('show');
+    status.textContent = '🔴 Grabando... toca de nuevo para detener';
+    status.className = 'rec-status recording';
+    timer.classList.add('show');
+
+    // Timer
+    let secs = 0;
+    recState[tid].timerInterval = setInterval(() => {
+      secs++;
+      const m = Math.floor(secs/60);
+      const s = secs % 60;
+      timer.textContent = m + ':' + String(s).padStart(2,'0');
+      // Auto stop at 3 minutes
+      if (secs >= 180) stopRec(tid);
+    }, 1000);
+
+  } catch(err) {
+    const status = document.getElementById('recstatus-' + tid);
+    if (err.name === 'NotAllowedError') {
+      status.textContent = '⚠️ Activa el micrófono: Ajustes → Safari → Micrófono → Permitir';
+    } else {
+      status.textContent = '⚠️ Error: ' + err.message;
+    }
+    status.className = 'rec-status err';
+  }
+}
+
+function stopRec(tid) {
+  if (recState[tid] && recState[tid].recorder) {
+    recState[tid].recorder.stop();
+  }
+}
+
+function redoRec(tid) {
+  const player = document.getElementById('recaudio-' + tid);
+  const redo = document.getElementById('recredo-' + tid);
+  const btn = document.getElementById('recbtn-' + tid);
+  const label = document.getElementById('reclabel-' + tid);
+  const status = document.getElementById('recstatus-' + tid);
+  const timer = document.getElementById('rectimer-' + tid);
+  player.src = '';
+  player.classList.remove('show');
+  redo.classList.remove('show');
+  btn.classList.remove('done','recording');
+  label.textContent = '🎙️  Grabar respuesta';
+  label.style.display = 'inline';
+  status.textContent = 'Toca para comenzar a grabar';
+  status.className = 'rec-status';
+  timer.textContent = '0:00';
+  timer.classList.remove('show');
+  if (recState[tid]) recState[tid] = null;
+}
+
+// Override buildRow to include audio blob as base64
+const _origBuildRow = buildRow;
+function buildRow() {
+  const row = _origBuildRow();
+  // For each audio field, convert blob to note if exists
+  const audioFields = {
+    'mej7': 'p8_mejora', 'mej15': 'p11_mejora', 'mej30': 'p14_mejora',
+    's-cambio': 's_cambio', 's-detalle': 's_detalle'
+  };
+  Object.entries(audioFields).forEach(([tid, key]) => {
+    if (recState[tid] && recState[tid].blobUrl) {
+      row[key] = '[Audio grabado - ' + new Date().toLocaleTimeString('es-PE') + ']';
+    }
+  });
+  return row;
+}
+
+// init steps
+var s1b = document.getElementById("step-1b");
+if(s1b) s1b.style.display="none";
 document.getElementById("step-2").classList.remove("on");
 hideB("step-2");
 </script>
