@@ -995,30 +995,36 @@ function goBack() {
   window.scrollTo(0, 0);
 }
 function validate2() {
+  var i, missing;
   if (trab === "No") {
     if (!pSel.sal) { shake("c-sal-playa"); toast("¿En qué playa trabajaste? 📍"); return false; }
     if (!getR("s-puesto")) { shake("c-s-puesto"); toast("¿Qué puesto ocupaste? 💼"); return false; }
     if (!document.getElementById("s-ingreso").value) { shake("c-s-ingreso"); toast("¿Cuándo ingresaste? 📅"); return false; }
     if (!document.getElementById("s-retiro").value) { shake("c-s-retiro"); toast("¿Cuándo fue tu último día? 🏁"); return false; }
     if (!getR("s-genero")) { shake("c-s-genero"); toast("¿Con qué género te identificas? 🙋"); return false; }
-    var s8keys = ["s8_1","s8_2","s8_3","s8_4","s8_5"];
-    for (var x=0; x<s8keys.length; x++) { if (!lk[s8keys[x]]) { shake("c-s8"); toast("Responde todas las afirmaciones de experiencia inicial 🌱"); return false; } }
-    var s9keys = ["s9_1","s9_2","s9_3"];
-    for (var y=0; y<s9keys.length; y++) { if (!lk[s9keys[y]]) { shake("c-s9"); toast("Responde todas las afirmaciones de apoyo y clima 🤝"); return false; } }
+    missing = false;
+    for (i=1; i<=5; i++) { if (!lk["s8_"+i]) { missing=true; break; } }
+    if (missing) { shake("c-s8"); toast("Responde todas las afirmaciones de experiencia inicial 🌱"); return false; }
+    missing = false;
+    for (i=1; i<=3; i++) { if (!lk["s9_"+i]) { missing=true; break; } }
+    if (missing) { shake("c-s9"); toast("Responde todas las afirmaciones de apoyo y clima 🤝"); return false; }
     if (!motivo) { shake("c-s-motivo"); toast("¿Cuál fue el principal motivo de tu salida? 🚪"); return false; }
     return true;
   }
   if (tpo === "7") {
-    var l7keys = ["l7_1","l7_2","l7_3","l7_4"];
-    for (var a=0; a<l7keys.length; a++) { if (!lk[l7keys[a]]) { shake("c-l7"); toast("Responde todas las afirmaciones de la tabla 🌱"); return false; } }
+    missing = false;
+    for (i=1; i<=4; i++) { if (!lk["l7_"+i]) { missing=true; break; } }
+    if (missing) { shake("c-l7"); toast("Responde todas las afirmaciones de la tabla 🌱"); return false; }
     if (!getR("cont7")) { shake("c-cont7"); toast("¿Te gustaría continuar en apparka? 💜"); return false; }
   } else if (tpo === "15") {
-    var l15keys = ["l15_1","l15_2","l15_3","l15_4"];
-    for (var b=0; b<l15keys.length; b++) { if (!lk[l15keys[b]]) { shake("c-l15"); toast("Responde todas las afirmaciones de la tabla 🌿"); return false; } }
+    missing = false;
+    for (i=1; i<=4; i++) { if (!lk["l15_"+i]) { missing=true; break; } }
+    if (missing) { shake("c-l15"); toast("Responde todas las afirmaciones de la tabla 🌿"); return false; }
     if (!getR("cont15")) { shake("c-cont15"); toast("¿Te gustaría continuar en apparka? 💜"); return false; }
   } else {
-    var l30keys = ["l30_1","l30_2","l30_3","l30_4","l30_5"];
-    for (var c2=0; c2<l30keys.length; c2++) { if (!lk[l30keys[c2]]) { shake("c-l30"); toast("Responde todas las afirmaciones de la tabla 🌳"); return false; } }
+    missing = false;
+    for (i=1; i<=5; i++) { if (!lk["l30_"+i]) { missing=true; break; } }
+    if (missing) { shake("c-l30"); toast("Responde todas las afirmaciones de la tabla 🌳"); return false; }
     if (!getR("cont30")) { shake("c-cont30"); toast("¿Te ves continuando en apparka? 💜"); return false; }
   }
   return true;
@@ -1136,12 +1142,18 @@ function uploadToCloudinary(blob, tid) {
   .then(function(data) {
     if (data.secure_url) {
       recState[tid].cloudUrl = data.secure_url;
-      document.getElementById("reclabel-"+tid).textContent = "✅ Audio guardado";
-      document.getElementById("recstatus-"+tid).textContent = "✅ ¡Listo! Audio subido correctamente.";
+      document.getElementById("recbtn-"+tid).classList.remove("recording","done");
+      document.getElementById("reclabel-"+tid).textContent = "🎙️ Grabar otra vez";
+      document.getElementById("reclabel-"+tid).style.display = "inline";
+      document.getElementById("recwaves-"+tid).style.display = "none";
+      document.getElementById("recstatus-"+tid).textContent = "✅ Audio subido. Puedes escucharlo arriba o grabar otro.";
       document.getElementById("recstatus-"+tid).className = "rec-status done";
     } else {
       recState[tid].cloudUrl = "";
-      document.getElementById("reclabel-"+tid).textContent = "✅ Audio local guardado";
+      document.getElementById("recbtn-"+tid).classList.remove("recording","done");
+      document.getElementById("reclabel-"+tid).textContent = "🎙️ Grabar otra vez";
+      document.getElementById("reclabel-"+tid).style.display = "inline";
+      document.getElementById("recwaves-"+tid).style.display = "none";
       document.getElementById("recstatus-"+tid).textContent = "Audio guardado localmente.";
       document.getElementById("recstatus-"+tid).className = "rec-status done";
     }
@@ -1184,6 +1196,7 @@ function startRec(tid) {
       document.getElementById("recstatus-"+tid).className = "rec-status recording";
       document.getElementById("rectimer-"+tid).classList.remove("show");
       stream.getTracks().forEach(function(t){ t.stop(); });
+      recState[tid].recording = false;
       // Upload to Cloudinary
       recState[tid] = Object.assign(recState[tid]||{}, {blobUrl:blobUrl, cloudUrl:"", recording:false});
       uploadToCloudinary(blob, tid);
