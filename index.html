@@ -190,6 +190,31 @@ input[type=text]:focus,input[type=date]:focus{border-color:var(--p400);box-shado
 .btn-share:hover{transform:translateY(-2px);}
 .btn-o{padding:13px 20px;background:transparent;color:rgba(255,255,255,0.9);border:2px solid rgba(255,255,255,0.35);border-radius:var(--rs);font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:background 0.2s;}
 .btn-o:hover{background:rgba(255,255,255,0.1);}
+
+/* ── LIKERT MOBILE ── */
+.lk-mobile { display: none; }
+.lk-options { display: flex; gap: 6px; margin-top: 8px; }
+.lk-opt {
+  flex: 1; padding: 10px 4px; border-radius: 8px;
+  border: 2px solid var(--g200); cursor: pointer;
+  text-align: center; transition: all 0.15s;
+  font-size: 11px; font-weight: 600; color: var(--g400);
+  line-height: 1.3;
+}
+.lk-opt:hover { border-color: var(--p300); background: var(--p50); }
+.lk-opt.on { border-color: var(--p600); background: var(--p100); color: var(--p700); }
+.lk-opt .lk-num { font-size: 16px; font-weight: 800; color: var(--p500); display: block; margin-bottom: 3px; }
+.lk-opt.on .lk-num { color: var(--p700); }
+.lk-statement { font-size: 14px; font-weight: 600; color: var(--g800); margin-bottom: 4px; line-height: 1.4; }
+.lk-scale-hint { font-size: 11px; color: var(--g400); margin-bottom: 10px; }
+.lk-item { padding: 12px 0; border-top: 1.5px solid var(--p100); }
+.lk-item:first-child { border-top: none; padding-top: 4px; }
+
+@media (max-width: 600px) {
+  .likert-wrap { display: none; }
+  .lk-mobile { display: block; }
+  .likert-hint { display: none; }
+}
 </style>
 </head>
 <body>
@@ -356,6 +381,62 @@ input[type=text]:focus,input[type=date]:focus{border-color:var(--p400);box-shado
             <tr><td>El trato de mi supervisor fue respetuoso</td><td><div class="lk-dot" onclick="lkPick('s8_5',1,this)"></div></td><td><div class="lk-dot" onclick="lkPick('s8_5',2,this)"></div></td><td><div class="lk-dot" onclick="lkPick('s8_5',3,this)"></div></td><td><div class="lk-dot" onclick="lkPick('s8_5',4,this)"></div></td></tr>
           </tbody>
         </table></div>
+<div class="lk-mobile"><div class="lk-item">
+          <div class="lk-statement">Entendí claramente mis funciones desde el inicio</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s8_1-1" onclick="lkPickMob('s8_1',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_1-2" onclick="lkPickMob('s8_1',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_1-3" onclick="lkPickMob('s8_1',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s8_1-4" onclick="lkPickMob('s8_1',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Recibí la capacitación necesaria para el puesto</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s8_2-1" onclick="lkPickMob('s8_2',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_2-2" onclick="lkPickMob('s8_2',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_2-3" onclick="lkPickMob('s8_2',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s8_2-4" onclick="lkPickMob('s8_2',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Conté con uniforme y herramientas a tiempo</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s8_3-1" onclick="lkPickMob('s8_3',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_3-2" onclick="lkPickMob('s8_3',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_3-3" onclick="lkPickMob('s8_3',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s8_3-4" onclick="lkPickMob('s8_3',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">El ritmo de trabajo fue adecuado</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s8_4-1" onclick="lkPickMob('s8_4',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_4-2" onclick="lkPickMob('s8_4',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_4-3" onclick="lkPickMob('s8_4',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s8_4-4" onclick="lkPickMob('s8_4',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">El trato de mi supervisor fue respetuoso</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s8_5-1" onclick="lkPickMob('s8_5',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_5-2" onclick="lkPickMob('s8_5',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s8_5-3" onclick="lkPickMob('s8_5',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s8_5-4" onclick="lkPickMob('s8_5',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div></div>
       </div>
       <div class="card" id="c-s9">
         <div class="q-text">🤝 Apoyo y clima en tu operación <span class="required">*</span></div>
@@ -368,6 +449,40 @@ input[type=text]:focus,input[type=date]:focus{border-color:var(--p400);box-shado
             <tr><td>Me sentí apoyado/a por mis compañeros</td><td><div class="lk-dot" onclick="lkPick('s9_3',1,this)"></div></td><td><div class="lk-dot" onclick="lkPick('s9_3',2,this)"></div></td><td><div class="lk-dot" onclick="lkPick('s9_3',3,this)"></div></td><td><div class="lk-dot" onclick="lkPick('s9_3',4,this)"></div></td></tr>
           </tbody>
         </table></div>
+<div class="lk-mobile"><div class="lk-item">
+          <div class="lk-statement">Sabía a quién acudir ante un problema en el turno</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s9_1-1" onclick="lkPickMob('s9_1',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s9_1-2" onclick="lkPickMob('s9_1',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s9_1-3" onclick="lkPickMob('s9_1',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s9_1-4" onclick="lkPickMob('s9_1',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">La comunicación con mi jefe inmediato fue clara</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s9_2-1" onclick="lkPickMob('s9_2',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s9_2-2" onclick="lkPickMob('s9_2',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s9_2-3" onclick="lkPickMob('s9_2',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s9_2-4" onclick="lkPickMob('s9_2',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Me sentí apoyado/a por mis compañeros</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-s9_3-1" onclick="lkPickMob('s9_3',1,this)">
+              <span class="lk-num">1</span>Muy en<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s9_3-2" onclick="lkPickMob('s9_3',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-s9_3-3" onclick="lkPickMob('s9_3',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-s9_3-4" onclick="lkPickMob('s9_3',4,this)">
+              <span class="lk-num">4</span>Muy de<br>acuerdo
+            </div></div>
+        </div></div>
       </div>
       <div class="audio-card" id="ac-s-cambio">
         <div class="ac-title">💡 ¿Qué cambio concreto habría hecho que te quedaras más tiempo?</div>
@@ -423,6 +538,51 @@ input[type=text]:focus,input[type=date]:focus{border-color:var(--p400);box-shado
             <tr><td>He contado con apoyo cuando lo he necesitado</td><td><div class="lk-dot" onclick="lkPick('l7_4',1,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l7_4',2,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l7_4',3,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l7_4',4,this)"></div></td></tr>
           </tbody>
         </table></div>
+<div class="lk-mobile"><div class="lk-item">
+          <div class="lk-statement">Recibí información clara para iniciar mi trabajo</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l7_1-1" onclick="lkPickMob('l7_1',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l7_1-2" onclick="lkPickMob('l7_1',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l7_1-3" onclick="lkPickMob('l7_1',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l7_1-4" onclick="lkPickMob('l7_1',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Tengo claras mis funciones y horarios</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l7_2-1" onclick="lkPickMob('l7_2',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l7_2-2" onclick="lkPickMob('l7_2',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l7_2-3" onclick="lkPickMob('l7_2',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l7_2-4" onclick="lkPickMob('l7_2',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Me sentí bien recibido/a por mi supervisor y equipo</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l7_3-1" onclick="lkPickMob('l7_3',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l7_3-2" onclick="lkPickMob('l7_3',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l7_3-3" onclick="lkPickMob('l7_3',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l7_3-4" onclick="lkPickMob('l7_3',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">He contado con apoyo cuando lo he necesitado</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l7_4-1" onclick="lkPickMob('l7_4',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l7_4-2" onclick="lkPickMob('l7_4',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l7_4-3" onclick="lkPickMob('l7_4',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l7_4-4" onclick="lkPickMob('l7_4',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div></div>
       </div>
       <div class="card" id="c-cont7">
         <div class="q-text">💜 ¿Te gustaría seguir siendo parte de apparka? <span class="required">*</span></div>
@@ -457,6 +617,51 @@ input[type=text]:focus,input[type=date]:focus{border-color:var(--p400);box-shado
             <tr><td>Me estoy adaptando bien al ritmo de trabajo</td><td><div class="lk-dot" onclick="lkPick('l15_4',1,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l15_4',2,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l15_4',3,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l15_4',4,this)"></div></td></tr>
           </tbody>
         </table></div>
+<div class="lk-mobile"><div class="lk-item">
+          <div class="lk-statement">Me siento cómodo/a en mi lugar de trabajo</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l15_1-1" onclick="lkPickMob('l15_1',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l15_1-2" onclick="lkPickMob('l15_1',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l15_1-3" onclick="lkPickMob('l15_1',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l15_1-4" onclick="lkPickMob('l15_1',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">El trato de mi supervisor y equipo ha sido bueno</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l15_2-1" onclick="lkPickMob('l15_2',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l15_2-2" onclick="lkPickMob('l15_2',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l15_2-3" onclick="lkPickMob('l15_2',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l15_2-4" onclick="lkPickMob('l15_2',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">El trabajo es como me lo explicaron</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l15_3-1" onclick="lkPickMob('l15_3',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l15_3-2" onclick="lkPickMob('l15_3',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l15_3-3" onclick="lkPickMob('l15_3',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l15_3-4" onclick="lkPickMob('l15_3',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Me estoy adaptando bien al ritmo de trabajo</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l15_4-1" onclick="lkPickMob('l15_4',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l15_4-2" onclick="lkPickMob('l15_4',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l15_4-3" onclick="lkPickMob('l15_4',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l15_4-4" onclick="lkPickMob('l15_4',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div></div>
       </div>
       <div class="card" id="c-cont15">
         <div class="q-text">💜 ¿Te gustaría seguir siendo parte de apparka? <span class="required">*</span></div>
@@ -492,6 +697,62 @@ input[type=text]:focus,input[type=date]:focus{border-color:var(--p400);box-shado
             <tr><td>Me siento orgulloso/a de trabajar en apparka</td><td><div class="lk-dot" onclick="lkPick('l30_5',1,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l30_5',2,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l30_5',3,this)"></div></td><td><div class="lk-dot" onclick="lkPick('l30_5',4,this)"></div></td></tr>
           </tbody>
         </table></div>
+<div class="lk-mobile"><div class="lk-item">
+          <div class="lk-statement">Entiendo la cultura y principios de apparka</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l30_1-1" onclick="lkPickMob('l30_1',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l30_1-2" onclick="lkPickMob('l30_1',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l30_1-3" onclick="lkPickMob('l30_1',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l30_1-4" onclick="lkPickMob('l30_1',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">La cultura apparka se vive realmente en el día a día</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l30_2-1" onclick="lkPickMob('l30_2',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l30_2-2" onclick="lkPickMob('l30_2',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l30_2-3" onclick="lkPickMob('l30_2',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l30_2-4" onclick="lkPickMob('l30_2',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Mi jefe/a representa bien los valores de apparka</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l30_3-1" onclick="lkPickMob('l30_3',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l30_3-2" onclick="lkPickMob('l30_3',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l30_3-3" onclick="lkPickMob('l30_3',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l30_3-4" onclick="lkPickMob('l30_3',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Me he sentido escuchado/a y tomado/a en cuenta</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l30_4-1" onclick="lkPickMob('l30_4',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l30_4-2" onclick="lkPickMob('l30_4',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l30_4-3" onclick="lkPickMob('l30_4',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l30_4-4" onclick="lkPickMob('l30_4',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div><div class="lk-item">
+          <div class="lk-statement">Me siento orgulloso/a de trabajar en apparka</div>
+          <div class="lk-options"><div class="lk-opt" id="mob-l30_5-1" onclick="lkPickMob('l30_5',1,this)">
+              <span class="lk-num">1</span>Totalmente<br>en desac.
+            </div><div class="lk-opt" id="mob-l30_5-2" onclick="lkPickMob('l30_5',2,this)">
+              <span class="lk-num">2</span>En<br>desacuerdo
+            </div><div class="lk-opt" id="mob-l30_5-3" onclick="lkPickMob('l30_5',3,this)">
+              <span class="lk-num">3</span>De<br>acuerdo
+            </div><div class="lk-opt" id="mob-l30_5-4" onclick="lkPickMob('l30_5',4,this)">
+              <span class="lk-num">4</span>Totalmente<br>de acuerdo
+            </div></div>
+        </div></div>
       </div>
       <div class="card" id="c-cont30">
         <div class="q-text">💜 ¿Te ves continuando en apparka? <span class="required">*</span></div>
@@ -603,6 +864,15 @@ function pickR(name, val, el) {
   el.querySelector("input").checked = true;
 }
 function getR(n) { var e = document.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : null; }
+
+function lkPickMob(key, val, el) {
+  lk[key] = val;
+  for (var v=1; v<=5; v++) {
+    var btn = document.getElementById("mob-" + key + "-" + v);
+    if (btn) btn.classList.remove("on");
+  }
+  el.classList.add("on");
+}
 function lkPick(k, v, el) {
   lk[k] = v;
   var dots = el.closest("tr").querySelectorAll(".lk-dot");
