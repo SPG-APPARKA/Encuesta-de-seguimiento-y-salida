@@ -562,7 +562,7 @@ var LL = ["Totalmente en desacuerdo","En desacuerdo","De acuerdo","Totalmente de
 var LS = ["Muy en desacuerdo","En desacuerdo","De acuerdo","Muy de acuerdo"];
 var lk = {}, recState = {};
 var trab = null, tpo = null, pSel = {main:"",sal:""}, motivo = "";
-var SHEETS_URL = "https://script.google.com/macros/s/AKfycbxniopw2HBktQg-xtjq6uQDvoCjz3Y41qhdPUrWlLbwd5zAuiQ_oy4eF_BSSgb3FJYN/exec";
+var SHEETS_URL = "https://script.google.com/macros/s/AKfycbzKnSzItgi5GioKpxMqna-qAkqsSkobpIRNf7ekIO007j70qwBv36hBrKLJ1SlusKs/exec";
 
 var toastTimer;
 function toast(msg, type) {
@@ -637,7 +637,7 @@ function goTo(stepId, s, t, l) {
 function ssRender(id, q, sel) {
   var list = document.getElementById("ss-" + id + "-list");
   var qq = q.toLowerCase();
-  var items = qq ? PLAYAS.filter(function(p){ return p.toLowerCase().indexOf(qq) >= 0; }).slice(0, 15) : PLAYAS.slice(0, 15);
+  var items = PLAYAS.filter(function(p){ return !qq || p.toLowerCase().indexOf(qq) >= 0; });
   list.innerHTML = "";
   if (!items.length) {
     var empty = document.createElement("div");
@@ -731,19 +731,24 @@ function validate2() {
     if (!document.getElementById("s-ingreso").value) { shake("c-s-ingreso"); toast("¿Cuándo ingresaste? 📅"); return false; }
     if (!document.getElementById("s-retiro").value) { shake("c-s-retiro"); toast("¿Cuándo fue tu último día? 🏁"); return false; }
     if (!getR("s-genero")) { shake("c-s-genero"); toast("¿Con qué género te identificas? 🙋"); return false; }
-    if (["s8_1","s8_2","s8_3","s8_4","s8_5"].some(function(k){ return !lk[k]; })) { shake("c-s8"); toast("Responde todas las afirmaciones de experiencia inicial 🌱"); return false; }
-    if (["s9_1","s9_2","s9_3"].some(function(k){ return !lk[k]; })) { shake("c-s9"); toast("Responde todas las afirmaciones de apoyo y clima 🤝"); return false; }
+    var s8keys = ["s8_1","s8_2","s8_3","s8_4","s8_5"];
+    for (var x=0; x<s8keys.length; x++) { if (!lk[s8keys[x]]) { shake("c-s8"); toast("Responde todas las afirmaciones de experiencia inicial 🌱"); return false; } }
+    var s9keys = ["s9_1","s9_2","s9_3"];
+    for (var y=0; y<s9keys.length; y++) { if (!lk[s9keys[y]]) { shake("c-s9"); toast("Responde todas las afirmaciones de apoyo y clima 🤝"); return false; } }
     if (!motivo) { shake("c-s-motivo"); toast("¿Cuál fue el principal motivo de tu salida? 🚪"); return false; }
     return true;
   }
   if (tpo === "7") {
-    if (["l7_1","l7_2","l7_3","l7_4"].some(function(k){ return !lk[k]; })) { shake("c-l7"); toast("Responde todas las afirmaciones de la tabla 🌱"); return false; }
+    var l7keys = ["l7_1","l7_2","l7_3","l7_4"];
+    for (var a=0; a<l7keys.length; a++) { if (!lk[l7keys[a]]) { shake("c-l7"); toast("Responde todas las afirmaciones de la tabla 🌱"); return false; } }
     if (!getR("cont7")) { shake("c-cont7"); toast("¿Te gustaría continuar en apparka? 💜"); return false; }
   } else if (tpo === "15") {
-    if (["l15_1","l15_2","l15_3","l15_4"].some(function(k){ return !lk[k]; })) { shake("c-l15"); toast("Responde todas las afirmaciones de la tabla 🌿"); return false; }
+    var l15keys = ["l15_1","l15_2","l15_3","l15_4"];
+    for (var b=0; b<l15keys.length; b++) { if (!lk[l15keys[b]]) { shake("c-l15"); toast("Responde todas las afirmaciones de la tabla 🌿"); return false; } }
     if (!getR("cont15")) { shake("c-cont15"); toast("¿Te gustaría continuar en apparka? 💜"); return false; }
   } else {
-    if (["l30_1","l30_2","l30_3","l30_4","l30_5"].some(function(k){ return !lk[k]; })) { shake("c-l30"); toast("Responde todas las afirmaciones de la tabla 🌳"); return false; }
+    var l30keys = ["l30_1","l30_2","l30_3","l30_4","l30_5"];
+    for (var c2=0; c2<l30keys.length; c2++) { if (!lk[l30keys[c2]]) { shake("c-l30"); toast("Responde todas las afirmaciones de la tabla 🌳"); return false; } }
     if (!getR("cont30")) { shake("c-cont30"); toast("¿Te ves continuando en apparka? 💜"); return false; }
   }
   return true;
@@ -757,7 +762,6 @@ function buildRow() {
       row.p6_bienvenida = lk.l7_3 ? LL[lk.l7_3-1] : ""; row.p6_apoyo = lk.l7_4 ? LL[lk.l7_4-1] : "";
       row.p7_continuar = getR("cont7") || "";
       row.p8_audio = recState["mej7"] && recState["mej7"].cloudUrl ? recState["mej7"].cloudUrl : (recState["mej7"] && recState["mej7"].blobUrl ? "Audio grabado (sin link)" : "");
-    row.p8_audio_b64 = recState["mej7"] && recState["mej7"].base64 ? recState["mej7"].base64.substring(0,50)+"..." : "";
     } else if (tpo === "15") {
       row.p9_comodo = lk.l15_1 ? LL[lk.l15_1-1] : ""; row.p9_trato = lk.l15_2 ? LL[lk.l15_2-1] : "";
       row.p9_exp = lk.l15_3 ? LL[lk.l15_3-1] : ""; row.p9_adapt = lk.l15_4 ? LL[lk.l15_4-1] : "";
@@ -775,8 +779,11 @@ function buildRow() {
     row.s_puesto = getR("s-puesto") || ""; row.s_ingreso = document.getElementById("s-ingreso").value || "";
     row.s_retiro = document.getElementById("s-retiro").value || ""; row.s_genero = getR("s-genero") || "";
     row.s_turno = getR("s-turno") || ""; row.s_edad = getR("s-edad") || "";
-    var sn = ["func","cap","uni","ritmo","sup"];
-    for (var i = 0; i < sn.length; i++) row["s8_"+sn[i]] = lk["s8_"+(i+1)] ? LS[lk["s8_"+(i+1)]-1] : "";
+    row["s8_funciones"]   = lk["s8_1"] ? LS[lk["s8_1"]-1] : "";
+    row["s8_capacitacion"] = lk["s8_2"] ? LS[lk["s8_2"]-1] : "";
+    row["s8_uniforme"]     = lk["s8_3"] ? LS[lk["s8_3"]-1] : "";
+    row["s8_ritmo"]        = lk["s8_4"] ? LS[lk["s8_4"]-1] : "";
+    row["s8_supervisor"]   = lk["s8_5"] ? LS[lk["s8_5"]-1] : "";
     row["s9_acudir_problema"] = lk["s9_1"] ? LS[lk["s9_1"]-1] : "";
     row["s9_comunicacion_jefe"] = lk["s9_2"] ? LS[lk["s9_2"]-1] : "";
     row["s9_apoyo_companeros"] = lk["s9_3"] ? LS[lk["s9_3"]-1] : "";
@@ -788,6 +795,15 @@ function buildRow() {
 }
 function doSubmit() {
   if (!validate2()) return;
+  // Check if any audio is still uploading
+  var audioIds = ["mej7","mej15","mej30","s-cambio","s-detalle"];
+  for (var i=0; i<audioIds.length; i++) {
+    var tid = audioIds[i];
+    if (recState[tid] && recState[tid].blobUrl && !recState[tid].cloudUrl) {
+      toast("⏳ Espera, el audio aún se está subiendo...", "warn");
+      return;
+    }
+  }
   var row = buildRow();
   document.getElementById("saving").classList.add("show");
   fetch(SHEETS_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(row)})
@@ -838,7 +854,7 @@ function newResp() {
 function uploadToCloudinary(blob, tid) {
   var formData = new FormData();
   formData.append("file", blob, "audio_" + tid + "_" + Date.now() + ".webm");
-  formData.append("upload_preset", "ml_default"); // Preset sin firma
+  formData.append("upload_preset", "Encuestasapparka");
   formData.append("api_key", "328561556138877");
   formData.append("folder", "encuesta_apparka");
   
